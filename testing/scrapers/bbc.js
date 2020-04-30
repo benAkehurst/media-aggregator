@@ -1,7 +1,6 @@
 const puppeteer = require('puppeteer');
 
-const dailyMail = async (url) => {
-  const dailyMailCookieOkButton = '.mol-ads-cmp--btn-primary';
+const bbc = async (url) => {
   const browser = await puppeteer.launch({
     headless: false,
     args: [
@@ -14,13 +13,8 @@ const dailyMail = async (url) => {
   const page = await browser.newPage();
   await page.goto(url.url);
   await page.waitFor(3000);
-  await page.click(dailyMailCookieOkButton);
-  await page.waitFor(3000);
-  await page.evaluate(async () => {
-    window.scrollBy(0, 450);
-  });
   const result = await page.evaluate(() => {
-    let headline = document.querySelector('.linkro-darkred').innerText;
+    let headline = document.querySelector('.gs-c-promo-heading').innerText;
     return headline;
   });
   await page.waitFor(1000);
@@ -36,4 +30,4 @@ const dailyMail = async (url) => {
   return newsObject;
 };
 
-module.exports = dailyMail;
+module.exports = bbc;
