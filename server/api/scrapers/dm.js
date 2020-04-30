@@ -8,8 +8,8 @@ const dailyMail = async (url) => {
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      `--window-size=${1000},${1000}`,
     ],
+    defaultViewport: null,
   });
   const page = await browser.newPage();
   await page.goto(url.url);
