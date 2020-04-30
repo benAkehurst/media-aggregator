@@ -24,7 +24,9 @@ const dailyMail = async (url) => {
     return headline;
   });
   await page.waitFor(1000);
-  await page.screenshot({ path: `${url.name}.jpg` });
+  await page.screenshot({
+    path: `${url.name}.png`,
+  });
   newsObject = {
     url: url.url,
     name: url.name,
