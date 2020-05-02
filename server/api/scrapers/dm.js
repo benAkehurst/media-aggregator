@@ -34,6 +34,16 @@ const dm = async (url) => {
   await page.click(dailyMailCookieOkButton);
   await page.waitFor(3000);
 
+  // Hide ad at page top
+  await page.evaluate(() => {
+    let topAd = document.querySelector('.billboard_wrapper');
+    let sideAdsLeft = document.querySelector('.articleAds-left');
+    let sideAdsRight = document.querySelector('.articleAds-right');
+    topAd.style.display = 'none';
+    sideAdsLeft.style.display = 'none';
+    sideAdsRight.style.display = 'none';
+  });
+
   // Extract headline
   const headline = await page.evaluate(() => {
     let headline = document.querySelector('.linkro-darkred').innerText;
