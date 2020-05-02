@@ -3,15 +3,20 @@ const mongoose = require('mongoose');
 const NewsClipping = mongoose.model('NewsClipping');
 
 exports.list_all_clippings_from_single_day = (req, res) => {
-  // TODO: 1. THE CLINET NEEDS TO SEND THE DAY AS .toISOstring()
+  // TODO: 1. THE CLINET NEEDS TO SEND THE DATE AS A STRING FROM MOMENT AS 'DD/MM/YYY'
   // get all
-  const day = req.params.day;
-  NewsClipping.find({ date: day }, function (err, user) {
+  const date = req.body.date;
+  NewsClipping.find({ date: date }, (err, clippings) => {
     if (err) {
-      res.send(err);
+      return res.status(500).json({
+        error: err,
+        message: 'No clippings fround',
+      });
     }
-    console.log(user);
-    res.json(user);
+    return res.status(200).json({
+      success: true,
+      data: clippings,
+    });
   });
 };
 

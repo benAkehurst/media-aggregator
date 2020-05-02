@@ -4,8 +4,8 @@ module.exports = (app) => {
 
   // Reader Routes
   app
-    .route('/api/reader/single-day/:day')
-    .get(reader.list_all_clippings_from_single_day);
+    .route('/api/reader/single-day')
+    .post(reader.list_all_clippings_from_single_day);
 
   app
     .route('/api/reader/single-hour/:hour')
