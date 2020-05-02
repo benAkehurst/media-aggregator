@@ -8,6 +8,7 @@ const cors = require('cors');
 // Models Imports
 const User = require('./api/models/userModel');
 const Task = require('./api/models/todoListModel');
+const NewsClipping = require('./api/models/newsClippingModel');
 
 // Init Express
 const app = express();
@@ -17,7 +18,7 @@ require('dotenv').config();
 mongoose.Promise = global.Promise;
 mongoose.connect(
   // `mongodb://${process.env.DB_CONNECT}`,
-  `mongodb://localhost:27017/default_db`,
+  `mongodb://localhost:27017/news_scraper`,
   {
     useNewUrlParser: true,
     useFindAndModify: false,

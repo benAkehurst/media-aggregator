@@ -1,4 +1,5 @@
-const fs = require('fs');
+const mongoose = require('mongoose');
+const NewsClipping = mongoose.model('NewsClipping');
 const cron = require('node-cron');
 
 const bbc = require('../scrapers/bbc');
@@ -15,40 +16,99 @@ const newsUrls = [
   { url: 'https://www.express.co.uk/', name: 'express' },
 ];
 
-exports.scrape = (req, response) => {
-  let results = [];
+exports.scrapeV1 = (req, response) => {
   bbc(newsUrls[0])
     .then((bbcResponse) => {
-      results.push(bbcResponse);
-      console.log(bbcResponse);
+      createNewClipping(bbcResponse).then((saveRes) => {
+        console.log(saveRes);
+      });
     })
     .catch((err) => console.log(err));
   dm(newsUrls[1])
     .then((dmResponse) => {
-      results.push(dmResponse);
-      console.log(results);
+      createNewClipping(dmResponse).then((saveRes) => {
+        console.log(saveRes);
+      });
     })
     .catch((err) => console.log(err));
-  yahoo(newsUrls[2])
-    .then((yahooResponse) => {
-      results.push(yahooResponse);
-      console.log(yahooResponse);
+  // yahoo(newsUrls[2])
+  //   .then((yahooResponse) => {
+  //     results.push(yahooResponse);
+  //     console.log(yahooResponse);
+  //   })
+  //   .catch((err) => console.log(err));
+  guardian(newsUrls[3])
+    .then((guardianResponse) => {
+      createNewClipping(guardianResponse).then((saveRes) => {
+        console.log(saveRes);
+      });
+    })
+    .catch((err) => console.log(err));
+  // express(newsUrls[4])
+  //   .then((expressResponse) => {
+  //     results.push(expressResponse);
+  //     console.log(expressResponse);
+  //   })
+  //   .catch((err) => console.log(err));
+};
+
+scrape = (req, response) => {
+  console.log('cron job called');
+  bbc(newsUrls[0])
+    .then((bbcResponse) => {
+      createNewClipping(bbcResponse).then((saveRes) => {
+        console.log(saveRes);
+      });
+    })
+    .catch((err) => console.log(err));
+  dm(newsUrls[1])
+    .then((dmResponse) => {
+      createNewClipping(dmResponse).then((saveRes) => {
+        console.log(saveRes);
+      });
     })
     .catch((err) => console.log(err));
   guardian(newsUrls[3])
     .then((guardianResponse) => {
-      results.push(guardianResponse);
-      console.log(guardianResponse);
+      createNewClipping(guardianResponse).then((saveRes) => {
+        console.log(saveRes);
+      });
     })
     .catch((err) => console.log(err));
-  express(newsUrls[4])
-    .then((expressResponse) => {
-      results.push(expressResponse);
-      console.log(expressResponse);
-    })
-    .catch((err) => console.log(err));
+};
+
+createNewClipping = (clipping) => {
+  let newClippung = new NewsClipping({
+    url: clipping.url,
+    name: clipping.name,
+    date: clipping.date,
+    headline: clipping.headline,
+    screenshotUrl: clipping.screenshotUrl,
+  });
+  return new Promise((resolve, reject) => {
+    newClippung.save((err, newClipping) => {
+      if (err) {
+        return reject({
+          error: err,
+          message: "Couldn't save new clipping",
+          code: 400,
+        });
+      } else {
+        return resolve({
+          message: 'clipping saved',
+          success: true,
+          obj: newClipping,
+        });
+      }
+    });
+  });
 };
 
 // cron.schedule('0 */6 * * *', () => {
 //   scrape();
 // });
+
+// Every 5 minutes
+cron.schedule('*/5 * * * *', () => {
+  scrape();
+});

@@ -5,5 +5,5 @@ module.exports = (app) => {
   /**
    * User Routes
    */
-  app.route('/api/scraper').get(scraperController.scrape);
+  app.route('/api/scraper').get(scraperController.scrapeV1);
 };
