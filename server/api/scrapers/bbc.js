@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const cloudinary = require('cloudinary').v2;
+const moment = require('moment');
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -9,6 +10,8 @@ cloudinary.config({
 
 const bbc = async (url) => {
   const d = new Date();
+  const date = moment(new Date()).format('DD/MM/YYYY');
+  const time = new Date().getTime();
 
   // Set file name for cloudinary
   const cloudinary_options = {
@@ -58,7 +61,8 @@ const bbc = async (url) => {
     return (newsObject = {
       url: url.url,
       name: url.name,
-      date: d,
+      date: date,
+      time: time,
       headline: headline,
       screenshotUrl: res.secure_url,
     });
