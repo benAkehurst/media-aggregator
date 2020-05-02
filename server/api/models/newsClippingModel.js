@@ -10,7 +10,10 @@ const NewsClippingSchema = new Schema({
     type: String,
   },
   date: {
-    type: Date,
+    type: String,
+  },
+  time: {
+    type: Number,
   },
   headline: {
     type: String,
