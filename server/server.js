@@ -61,9 +61,11 @@ app.use(cors());
 const userRoutes = require('./api/routes/userRoutes');
 const taskRoutes = require('./api/routes/todoListRoutes');
 const scraperRoutes = require('./api/routes/scraperRoutes');
+const readerRoutes = require('./api/routes/readerRoutes');
 userRoutes(app);
 taskRoutes(app);
 scraperRoutes(app);
+readerRoutes(app);
 
 // 404 Handling
 app.use((req, res) => {
