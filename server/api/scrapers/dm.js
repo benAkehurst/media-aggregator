@@ -34,7 +34,7 @@ const dm = async (url) => {
   await page.click(dailyMailCookieOkButton);
   await page.waitFor(3000);
 
-  // Hide ad at page top
+  // Hide page ads
   await page.evaluate(() => {
     let topAd = document.querySelector('.billboard_wrapper');
     let sideAdsLeft = document.querySelector('.articleAds-left');
