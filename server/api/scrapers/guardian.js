@@ -11,7 +11,6 @@ cloudinary.config({
 const guardian = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
-  const time = new Date().getTime();
   const cookieOkButton = '.css-16q7h4-button-defaultSize-iconDefault-iconLeft';
 
   // Set file name for cloudinary
@@ -75,7 +74,6 @@ const guardian = async (url) => {
       url: url.url,
       name: url.name,
       date: date,
-      time: time,
       headline: headline,
       screenshotUrl: res.secure_url,
     });

@@ -11,7 +11,6 @@ cloudinary.config({
 const dm = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
-  const time = new Date().getTime();
   const dailyMailCookieOkButton = '.mol-ads-cmp--btn-primary';
 
   // Set file name for cloudinary
@@ -75,7 +74,6 @@ const dm = async (url) => {
       url: url.url,
       name: url.name,
       date: date,
-      time: time,
       headline: headline,
       screenshotUrl: res.secure_url,
     });

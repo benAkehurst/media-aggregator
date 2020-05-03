@@ -11,7 +11,6 @@ cloudinary.config({
 const bbc = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
-  const time = new Date().getTime();
 
   // Set file name for cloudinary
   const cloudinary_options = {
@@ -62,7 +61,6 @@ const bbc = async (url) => {
       url: url.url,
       name: url.name,
       date: date,
-      time: time,
       headline: headline,
       screenshotUrl: res.secure_url,
     });
