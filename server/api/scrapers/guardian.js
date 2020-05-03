@@ -11,7 +11,6 @@ cloudinary.config({
 const guardian = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
-  const cookieOkButton = '.css-16q7h4-button-defaultSize-iconDefault-iconLeft';
 
   // Set file name for cloudinary
   const cloudinary_options = {
@@ -34,12 +33,11 @@ const guardian = async (url) => {
   await page.goto(url.url);
   await page.waitFor(3000);
 
-  // Close cookie popup
-  let checkCookie = await page.evaluate((cookieOkButton) => {
-    let isCookieButton = document.querySelector(cookieOkButton);
-    return !isCookieButton && true;
+  // Hide cookie popup
+  await page.evaluate(() => {
+    let cookieBanner = document.querySelector('.css-9om789-bannerStyles');
+    cookieBanner.style.display = 'none';
   });
-  checkCookie ? await page.click(cookieOkButton) : await page.waitFor(500);
 
   // Hide ad at page top
   await page.evaluate(() => {
