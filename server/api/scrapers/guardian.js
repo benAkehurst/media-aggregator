@@ -19,7 +19,7 @@ const guardian = async (url) => {
 
   // Define puppeteer instance
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -36,8 +36,9 @@ const guardian = async (url) => {
   // Hide cookie popup
   await page.evaluate(() => {
     let cookieBanner = document.querySelector('.css-9om789-bannerStyles');
-    cookieBanner.style.display = 'none';
+    cookieBanner ? (cookieBanner.style.display = 'none') : null;
   });
+  await page.waitFor(3000);
 
   // Hide ad at page top
   await page.evaluate(() => {
