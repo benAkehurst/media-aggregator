@@ -8,8 +8,8 @@ module.exports = (app) => {
     .post(reader.list_all_clippings_from_single_day);
 
   app
-    .route('/api/reader/single-hour/:hour')
-    .get(reader.list_all_clippings_from_hour);
+    .route('/api/reader/single-hour/')
+    .post(reader.list_all_clippings_from_hour);
 
   app.route('/api/reader/:clippingId').get(reader.read_single_clipping);
 };
