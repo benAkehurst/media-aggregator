@@ -35,8 +35,11 @@ const guardian = async (url) => {
   await page.waitFor(3000);
 
   // Close cookie popup
-  await page.click(cookieOkButton);
-  await page.waitFor(3000);
+  let checkCookie = await page.evaluate((cookieOkButton) => {
+    let isCookieButton = document.querySelector(cookieOkButton);
+    return !isCookieButton && true;
+  });
+  checkCookie ? await page.click(cookieOkButton) : await page.waitFor(500);
 
   // Hide ad at page top
   await page.evaluate(() => {
