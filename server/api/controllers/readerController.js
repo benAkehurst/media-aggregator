@@ -26,26 +26,17 @@ exports.list_all_clippings_from_single_day = (req, res) => {
 exports.list_all_clippings_from_hour = (req, res) => {
   /**
    * TODO:
-   * query structure: client needs to send  new Date().getHours() <- this will give a number between 0 & 23
+   * query structure: client needs to send  new Date().getHours() <- this will give a number between 1 & 23
    * {
-        "date":"02/05/2020"
+        "date":"02/05/2020",
+        "lowTime":"10",
+        "hightTime":"11"
       }
    */
-  // const date = req.body.date;
-  // const lowTime = req.body.lowTime;
-  // const highTime = req.body.highTime;
-
-  const date = '03/05/2020';
-  const lowTime = '1200';
-  const highTime = '1300';
-
-  // call helper to wokout my time frame
-  console.log(lowTime);
-  console.log(highTime);
-
+  const date = req.body.date;
+  const lowTime = req.body.lowTime;
+  const highTime = req.body.highTime;
   const formattedTime = formatTime(date, lowTime, highTime);
-  console.log(formattedTime);
-
   NewsClipping.find({ date: date }, (err, clippings) => {
     if (err) {
       return res.status(500).json({
@@ -53,9 +44,12 @@ exports.list_all_clippings_from_hour = (req, res) => {
         message: 'No clippings fround',
       });
     }
-    let filteredClippings = clippings.filter((d) => {
-      const time = new Date(d.created_at).getTime();
-      return formattedTime.low < time && time < formattedTime.high;
+    let filteredClippings = clippings.filter((clipping) => {
+      const time = new Date(clipping.created_at).getTime();
+      console.log(time);
+      return formattedTime.lowTime < time && formattedTime.highTime < time
+        ? clipping
+        : null;
     });
     return res.status(200).json({
       success: true,
