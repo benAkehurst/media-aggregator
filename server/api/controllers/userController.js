@@ -46,7 +46,7 @@ exports.create_a_user = (req, res) => {
         code: 400,
       });
     } else {
-      let userFiltered = _.pick(user.toObject(), ['name', '_id', 'userId']);
+      let userFiltered = _.pick(user.toObject(), ['name', '_id']);
       res.status(201).json({
         message: 'User created',
         success: true,
@@ -94,7 +94,7 @@ exports.login_a_user = (req, res) => {
       let token = jwt.sign({ username: user._id }, config.secret, {
         expiresIn: '24h', // expires in 24 hours
       });
-      let userFiltered = _.pick(user.toObject(), ['name', 'email', '_id']);
+      let userFiltered = _.pick(user.toObject(), ['name', '_id']);
       userFiltered.token = token;
       res.cookie('token', token, { expiresIn: '24h' });
       res.status(200).json({
