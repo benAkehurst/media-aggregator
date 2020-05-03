@@ -4,7 +4,6 @@ const NewsClipping = mongoose.model('NewsClipping');
 
 exports.list_all_clippings_from_single_day = (req, res) => {
   // TODO: 1. THE CLINET NEEDS TO SEND THE DATE AS A STRING FROM MOMENT AS 'DD/MM/YYY'
-  // get all
   const date = req.body.date;
   NewsClipping.find({ date: date }, (err, clippings) => {
     if (err) {
@@ -21,9 +20,28 @@ exports.list_all_clippings_from_single_day = (req, res) => {
 };
 
 exports.list_all_clippings_from_hour = (req, res) => {
-  // get all
-  const hour = req.params.hour;
-  console.log(hour);
+  /**
+   * TODO:
+   * query structure: 
+   * {
+        "hour": "14:00 - 15:00",
+        "date":"02/05/2020"
+      }
+   */
+  const date = req.body.date;
+  const hour = req.body.hour;
+  NewsClipping.find({ date: date }, (err, clippings) => {
+    if (err) {
+      return res.status(500).json({
+        error: err,
+        message: 'No clippings fround',
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: clippings,
+    });
+  });
 };
 
 exports.read_single_clipping = (req, res) => {
