@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 exports.formatTime = (date, lowTime, highTime) => {
   const parsedDate = swapArrayElements(date, 1, 4).join('');
   const parsedLowTime = parseInt(lowTime);
