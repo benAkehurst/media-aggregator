@@ -2,8 +2,6 @@
 const mongoose = require('mongoose');
 const NewsClipping = mongoose.model('NewsClipping');
 
-const moment = require('moment');
-
 const { formatTime } = require('./../../helpers/timeAndDate');
 
 exports.list_all_clippings_from_single_day = (req, res) => {
