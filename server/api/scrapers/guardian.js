@@ -25,7 +25,7 @@ const guardian = async (url) => {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
     ],
-    defaultViewport: { width: 1920, height: 1080 },
+    defaultViewport: { width: 1440, height: 1080 },
   });
 
   // Launch scraper

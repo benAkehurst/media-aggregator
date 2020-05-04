@@ -26,13 +26,15 @@ const dm = async (url) => {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
     ],
-    defaultViewport: { width: 1920, height: 1080 },
+    defaultViewport: { width: 1440, height: 1080 },
   });
 
   // Launch scraper
   const page = await browser.newPage();
   await page.goto(url.url);
-  await page.waitFor(3000);
+  await page.waitFor(3500);
+
+  // Close Cookie popup
   await page.click(dailyMailCookieOkButton);
   await page.waitFor(3000);
 

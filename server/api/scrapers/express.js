@@ -26,7 +26,7 @@ const express = async (url) => {
       '--disable-dev-shm-usage',
     ],
     defaultViewport: {
-      width: 1920,
+      width: 1440,
       height: 1080,
     },
   });
