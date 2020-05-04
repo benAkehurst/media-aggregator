@@ -10,6 +10,10 @@ import SearchInput from '../../Molecules/SearchInput/SearchInput';
 import Avatar from '../../Molecules/Avatar/Avatar';
 
 class Header extends Component {
+  renderText = () => {
+    return <p className={classes.HeaderText}>{this.props.headerText}</p>;
+  };
+
   renderSearch = () => {
     return (
       <div className={classes.SearchWrapper}>
@@ -66,6 +70,7 @@ class Header extends Component {
               corners={this.props.logoCorners}
             />
           </div>
+          {this.props.hasText ? this.renderText() : null}
           {this.props.hasSearch ? (
             this.renderSearch()
           ) : (
@@ -81,7 +86,9 @@ class Header extends Component {
 
 Header.propTypes = {
   hasSearch: PropTypes.bool,
+  hasText: PropTypes.bool,
   headerBgColor: PropTypes.string,
+  headerText: PropTypes.string,
   logoSize: PropTypes.string,
   logoImageLink: PropTypes.string,
   logoAltText: PropTypes.string,

@@ -4,11 +4,21 @@ import axios from '../../axios-connector';
 
 import Aux from '../../hoc/Aux';
 
+import Header from '../../Components/Organisms/Header/Header';
+
 class Home extends Component {
   render() {
     return (
       <Aux>
-        <div className={classes.HeaderWrapper}>Header</div>
+        <div className={classes.HeaderWrapper}>
+          <header>
+            <Header
+              headerBgColor={'primary'}
+              hasText={true}
+              headerText={'UK News'}
+            />
+          </header>
+        </div>
         <div className={classes.SelectorWrapper}>
           <div className={classes.DateTimeWrapper}>
             <div className={classes.CalenderWrapper}>Calendar</div>
