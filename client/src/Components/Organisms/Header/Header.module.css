@@ -1,7 +1,7 @@
 .HeaderWrapper {
   font-family: 'Raleway', sans-serif;
   width: 100%;
-  height: 6rem;
+  height: 3rem;
   box-sizing: border-box;
   padding: 0.5rem;
   display: flex;
@@ -12,11 +12,21 @@
 }
 
 .HeaderWrapper.primary {
-  background-color: lightblue;
+  background-color: #1976d2;
 }
 
 .HeaderWrapper.secondary {
   background-color: lightsalmon;
+}
+
+.HeaderWrapper > .HeaderText {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  font-size: 1.5rem;
+  color: #ccc;
 }
 
 .HeaderWrapper > .LogoWrapper {
