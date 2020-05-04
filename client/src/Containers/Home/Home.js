@@ -53,18 +53,26 @@ class Home extends Component {
       });
   };
 
+  generateSpinner = () => {
+    return (
+      <div className={classes.SpinnerContainer}>
+        <Spinner size="medium" color="black" />
+      </div>
+    );
+  };
+
+  generateHeader = () => {
+    return (
+      <Header headerBgColor={'primary'} hasText={true} headerText={'UK News'} />
+    );
+  };
+
   render() {
     return (
       <Aux>
-        {this.isLoading ? <Spinner /> : null}
+        {this.state.isLoading ? this.generateSpinner() : null}
         <div className={classes.HeaderWrapper}>
-          <header>
-            <Header
-              headerBgColor={'primary'}
-              hasText={true}
-              headerText={'UK News'}
-            />
-          </header>
+          <header>{this.generateHeader()}</header>
         </div>
         <div className={classes.SelectorWrapper}>
           <div className={classes.DateTimeWrapper}>
