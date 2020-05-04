@@ -6,6 +6,7 @@ const bbc = require('../scrapers/bbc');
 const dm = require('../scrapers/dm');
 const guardian = require('../scrapers/guardian');
 const express = require('../scrapers/express');
+const telegraph = require('../scrapers/telegraph');
 
 const newsUrls = [
   { url: 'https://www.bbc.co.uk/news', name: 'bbc' },
@@ -41,8 +42,15 @@ exports.scrapeV1 = (req, response) => {
     })
     .catch((err) => console.log(err));
   express(newsUrls[3])
-    .then((guardianResponse) => {
-      createNewClipping(guardianResponse).then((saveRes) => {
+    .then((expressResponse) => {
+      createNewClipping(expressResponse).then((saveRes) => {
+        console.log(saveRes);
+      });
+    })
+    .catch((err) => console.log(err));
+  telegraph(newsUrls[4])
+    .then((telegraphResponse) => {
+      createNewClipping(telegraphResponse).then((saveRes) => {
         console.log(saveRes);
       });
     })
@@ -72,8 +80,15 @@ exports.scrapeV1 = (req, response) => {
 //     })
 //     .catch((err) => console.log(err));
 // express(newsUrls[3])
-//   .then((guardianResponse) => {
-//     createNewClipping(guardianResponse).then((saveRes) => {
+//   .then((expressResponse) => {
+//     createNewClipping(expressResponse).then((saveRes) => {
+//       console.log(saveRes);
+//     });
+//   })
+//   .catch((err) => console.log(err));
+// telegraph(newsUrls[4])
+//   .then((telegraphResponse) => {
+//     createNewClipping(telegraphResponse).then((saveRes) => {
 //       console.log(saveRes);
 //     });
 //   })
