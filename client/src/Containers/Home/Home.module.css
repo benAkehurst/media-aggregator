@@ -39,8 +39,11 @@
 }
 
 .SelectorWrapper > .DateTimeWrapper > .CalenderWrapper {
-  width: 40%;
-  border: 1px solid aqua;
+  width: 60%;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 1px 4px 10px 1px rgba(0, 0, 0, 0.2);
 }
 .SelectorWrapper > .DateTimeWrapper > .TimesWrapper {
   width: 40%;

@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import classes from './Home.module.css';
 import axios from '../../axios-connector';
 
+import { convertDate } from '../../Helpers/timeAndDate';
+
 import Aux from '../../hoc/Aux';
+import Calendar from 'react-calendar';
 
 import Spinner from '../../Components/Atoms/Spinner/Spinner';
 import Header from '../../Components/Organisms/Header/Header';
@@ -20,8 +23,9 @@ class Home extends Component {
     dataToDisplay: null,
   };
 
-  dateSelectedHandler = () => {
-    this.setState({ pickedDate: true, pickedDateValue: '03/05/2020' });
+  dateSelectedHandler = (e) => {
+    const convertedDate = convertDate(e);
+    this.setState({ pickedDate: true, pickedDateValue: convertedDate });
   };
 
   timeSelectedHandler = () => {
@@ -67,6 +71,10 @@ class Home extends Component {
     );
   };
 
+  generateCalendar = () => {
+    return <Calendar onChange={(e) => this.dateSelectedHandler(e)} />;
+  };
+
   render() {
     return (
       <Aux>
@@ -76,7 +84,9 @@ class Home extends Component {
         </div>
         <div className={classes.SelectorWrapper}>
           <div className={classes.DateTimeWrapper}>
-            <div className={classes.CalenderWrapper}>Calendar</div>
+            <div className={classes.CalenderWrapper}>
+              {this.generateCalendar()}
+            </div>
             <div className={classes.TimesWrapper}>Times</div>
           </div>
           <div className={classes.SiteOptionsWrapper}>News Options</div>
