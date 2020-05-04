@@ -78,7 +78,6 @@ const express = async (url) => {
       url: url.url,
       name: url.name,
       date: date,
-      headline: headline,
       screenshotUrl: res.secure_url,
     });
   });
