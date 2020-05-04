@@ -32,7 +32,8 @@ const dm = async (url) => {
   // Launch scraper
   const page = await browser.newPage();
   await page.goto(url.url);
-  await page.waitFor(3500);
+  await page.setDefaultNavigationTimeout(0);
+  await page.waitFor(3000);
 
   // Close Cookie popup
   await page.click(dailyMailCookieOkButton);

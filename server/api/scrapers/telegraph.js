@@ -19,7 +19,7 @@ const telegraph = async (url) => {
 
   // Define puppeteer instance
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -31,7 +31,8 @@ const telegraph = async (url) => {
   // Launch scraper
   const page = await browser.newPage();
   await page.goto(url.url);
-  await page.waitFor(3500);
+  await page.setDefaultNavigationTimeout(0);
+  await page.waitFor(3000);
 
   // close subscribe popup
   await page.waitFor(1000);

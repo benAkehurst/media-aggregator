@@ -57,46 +57,8 @@ exports.scrapeV1 = (req, response) => {
     .catch((err) => console.log(err));
 };
 
-// scrape = (req, response) => {
-//   bbc(newsUrls[0])
-//     .then((bbcResponse) => {
-//       createNewClipping(bbcResponse).then((saveRes) => {
-//         console.log(saveRes);
-//       });
-//     })
-//     .catch((err) => console.log(err));
-//   dm(newsUrls[1])
-//     .then((dmResponse) => {
-//       createNewClipping(dmResponse).then((saveRes) => {
-//         console.log(saveRes);
-//       });
-//     })
-//     .catch((err) => console.log(err));
-//   guardian(newsUrls[2])
-//     .then((guardianResponse) => {
-//       createNewClipping(guardianResponse).then((saveRes) => {
-//         console.log(saveRes);
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// express(newsUrls[3])
-//   .then((expressResponse) => {
-//     createNewClipping(expressResponse).then((saveRes) => {
-//       console.log(saveRes);
-//     });
-//   })
-//   .catch((err) => console.log(err));
-// telegraph(newsUrls[4])
-//   .then((telegraphResponse) => {
-//     createNewClipping(telegraphResponse).then((saveRes) => {
-//       console.log(saveRes);
-//     });
-//   })
-//   .catch((err) => console.log(err));
-// };
-
 createNewClipping = (clipping) => {
-  let newClipping = new NewsClipping({
+  let newNewsClipping = new NewsClipping({
     url: clipping.url,
     name: clipping.name,
     date: clipping.date,
@@ -104,7 +66,7 @@ createNewClipping = (clipping) => {
     screenshotUrl: clipping.screenshotUrl,
   });
   return new Promise((resolve, reject) => {
-    newClipping.save((err, newClipping) => {
+    newNewsClipping.save((err, newsItem) => {
       if (err) {
         return reject({
           error: err,
@@ -115,7 +77,7 @@ createNewClipping = (clipping) => {
         return resolve({
           message: 'clipping saved',
           success: true,
-          obj: newClipping,
+          data: newsItem,
         });
       }
     });

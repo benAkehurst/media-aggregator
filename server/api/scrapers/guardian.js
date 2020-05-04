@@ -30,6 +30,7 @@ const guardian = async (url) => {
 
   // Launch scraper
   const page = await browser.newPage();
+  await page.setDefaultNavigationTimeout(0);
   await page.goto(url.url);
   await page.waitFor(3000);
 

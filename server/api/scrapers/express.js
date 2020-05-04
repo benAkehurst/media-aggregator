@@ -34,6 +34,7 @@ const express = async (url) => {
   // Launch scraper
   const page = await browser.newPage();
   await page.goto(url.url);
+  await page.setDefaultNavigationTimeout(0);
   await page.waitFor(2000);
 
   // hide cookie popup
