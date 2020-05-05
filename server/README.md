@@ -1,4 +1,4 @@
-# node.js boilerplate API server
+# Media Aggregator Server
 
 ## This repo can be cloned and used as a base project of a node.js API server
 
