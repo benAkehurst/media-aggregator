@@ -9,6 +9,7 @@ import Aux from '../../hoc/Aux';
 import Calendar from 'react-calendar';
 
 import Spinner from '../../Components/Atoms/Spinner/Spinner';
+import Image from '../../Components/Atoms/Image/Image';
 import Header from '../../Components/Organisms/Header/Header';
 
 class Home extends Component {
@@ -19,7 +20,9 @@ class Home extends Component {
     pickedDateValue: null,
     pickedNewsSource: false,
     isLoadingNewsItems: false,
-    dataToDisplay: null,
+    newsDataFromServer: null,
+    singleItem: false,
+    singleItemData: null,
   };
 
   dateSelectedHandler = (e) => {
@@ -39,19 +42,29 @@ class Home extends Component {
     axios
       .post(`/reader/single-news-source/`, { data: postData })
       .then((res) => {
-        console.log(res);
+        if (res.data.success) {
+          this.setState({
+            newsDataFromServer: res.data.data,
+            isLoadingNewsItems: false,
+          });
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  singleItemSelectedHandler = () => {
-    let clippingId = this.state.dataToDisplay._id;
+  singleItemSelectedHandler = (id) => {
+    let clippingId = id;
     axios
       .get(`/reader/${clippingId}`)
       .then((res) => {
-        console.log(res);
+        if (res.data.status) {
+          this.setState({
+            singleItem: true,
+            singleItemData: res.data.data,
+          });
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -76,9 +89,9 @@ class Home extends Component {
     return <Calendar onChange={(e) => this.dateSelectedHandler(e)} />;
   };
 
-  generateNewsItems = () => {
-    const newsItems = getNewsItems();
-    return newsItems.map((item) => {
+  generateNewsSources = () => {
+    const newsSources = getNewsItems();
+    return newsSources.map((item) => {
       return (
         <div
           key={item.news}
@@ -86,6 +99,21 @@ class Home extends Component {
           onClick={(e) => this.newsSourcePickedHandler(item.news)}
         >
           {item.initials}
+        </div>
+      );
+    });
+  };
+
+  generateNewsItems = () => {
+    const newsItems = [...this.state.newsDataFromServer];
+    return newsItems.map((item) => {
+      let date = new Date(item.created_at);
+      return (
+        <div
+          key={item._id}
+          onClick={(e) => this.singleItemSelectedHandler(item._id)}
+        >
+          {date.toISOString().replace(/^[^:]*([0-2]\d:[0-5]\d).*$/, '$1')}
         </div>
       );
     });
@@ -107,16 +135,30 @@ class Home extends Component {
           </div>
           {this.state.pickedDate ? (
             <div className={classes.SiteOptionsWrapper}>
+              {this.generateNewsSources()}
+            </div>
+          ) : null}
+          {this.state.newsDataFromServer ? (
+            <div className={classes.NewsItemsWrapper}>
               {this.generateNewsItems()}
             </div>
           ) : null}
-          <div className={classes.NewsItemsWrapper}>News Items</div>
         </div>
-        <div className={classes.ViewerWrapper}>
-          <div className={classes.NewsImageWrapper}>Image</div>
-          <div className={classes.NewsHeadlineWrapper}>Headline</div>
-          <div className={classes.SharingWrapper}>Sharing</div>
-        </div>
+        {this.state.singleItem ? (
+          <div className={classes.ViewerWrapper}>
+            <div className={classes.NewsImageWrapper}>
+              <Image
+                imageLink={this.state.singleItemData.screenshotUrl}
+                altText={'news screenshot'}
+                size="large"
+              />
+            </div>
+            <div className={classes.NewsHeadlineWrapper}>
+              <h3>{this.state.singleItemData.headline}</h3>
+            </div>
+            <div className={classes.SharingWrapper}>Sharing</div>
+          </div>
+        ) : null}
       </Aux>
     );
   }

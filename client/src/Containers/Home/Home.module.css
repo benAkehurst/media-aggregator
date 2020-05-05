@@ -67,18 +67,37 @@
   justify-content: space-around;
 }
 
-.SelectorWrapper > .SiteOptionsWrapper > div:hover {
-  cursor: pointer;
-}
-
 .SelectorWrapper > .NewsItemsWrapper {
   width: 100%;
-  border: 1px solid aqua;
+  overflow: scroll;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.SelectorWrapper > .NewsItemsWrapper > div {
+  width: 2.75rem;
+  padding: 0.25rem;
+  height: 2rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-shadow: 1px 4px 10px 1px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.SelectorWrapper > .SiteOptionsWrapper > div:hover,
+.SelectorWrapper > .NewsItemsWrapper > div:hover {
+  cursor: pointer;
 }
 
 .ViewerWrapper {
   max-width: 100vw;
-  border: 1px solid blue;
+  overflow: scroll;
   height: 30rem;
   padding: 1rem;
   box-sizing: border-box;
@@ -91,11 +110,9 @@
 
 .ViewerWrapper > .NewsImageWrapper {
   width: 98%;
-  border: 1px solid gold;
 }
 .ViewerWrapper > .NewsHeadlineWrapper {
   width: 90%;
-  border: 1px solid blueviolet;
 }
 .ViewerWrapper > .SharingWrapper {
   width: 90%;
