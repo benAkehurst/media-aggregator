@@ -11,5 +11,9 @@ module.exports = (app) => {
     .route('/api/reader/single-hour/')
     .post(reader.list_all_clippings_from_hour);
 
+  app
+    .route('/api/reader/single-news-source/')
+    .post(reader.list_all_clippings_from_news_source);
+
   app.route('/api/reader/:clippingId').get(reader.read_single_clipping);
 };

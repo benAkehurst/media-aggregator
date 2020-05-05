@@ -64,6 +64,24 @@ exports.list_all_clippings_from_hour = (req, res) => {
   });
 };
 
+exports.list_all_clippings_from_news_source = (req, res) => {
+  const date = req.body.data.date;
+  const newsSite = req.body.data.newsSite;
+  NewsClipping.find({ date: date, name: newsSite }, (err, clippings) => {
+    if (err) {
+      return res.status(500).json({
+        error: err,
+        message: 'No clippings fround',
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'All clippings',
+      data: clippings,
+    });
+  });
+};
+
 exports.read_single_clipping = (req, res) => {
   NewsClipping.findById(req.params.clippingId, (err, clipping) => {
     if (err) {
