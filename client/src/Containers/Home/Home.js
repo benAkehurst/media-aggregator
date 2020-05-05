@@ -3,6 +3,7 @@ import classes from './Home.module.css';
 import axios from '../../axios-connector';
 
 import { convertDate } from '../../Helpers/timeAndDate';
+import { getNewsItems } from '../../Helpers/newsOptions';
 
 import Aux from '../../hoc/Aux';
 import Calendar from 'react-calendar';
@@ -16,10 +17,8 @@ class Home extends Component {
     isLoading: false,
     pickedDate: false,
     pickedDateValue: null,
-    pickedTime: false,
-    pickedTimeValue: null,
-    pickedNewSource: null,
-    hasNewsItem: false,
+    pickedNewsSource: false,
+    isLoadingNewsItems: false,
     dataToDisplay: null,
   };
 
@@ -28,24 +27,26 @@ class Home extends Component {
     this.setState({ pickedDate: true, pickedDateValue: convertedDate });
   };
 
-  timeSelectedHandler = () => {
-    this.setState({ pickedTime: true, pickedTimeValue: [12, 13] });
+  newsSourcePickedHandler = (e) => {
+    this.setState({
+      pickedNewsSource: true,
+      isLoadingNewsItems: true,
+    });
+    const postData = {
+      date: this.state.pickedDateValue,
+      newsSite: e,
+    };
     axios
-      .post('/reader/single-hour/', {
-        date: this.state.pickedDateValue,
-        lowTime: this.state.pickedDateValue[0],
-        highTime: this.state.pickedDateValue[1],
-      })
+      .post(`/reader/single-news-source/`, { data: postData })
       .then((res) => {
         console.log(res);
-        this.setState({ dataToDisplay: res.data });
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  newsSouceSelectedHandler = () => {
+  singleItemSelectedHandler = () => {
     let clippingId = this.state.dataToDisplay._id;
     axios
       .get(`/reader/${clippingId}`)
@@ -75,6 +76,21 @@ class Home extends Component {
     return <Calendar onChange={(e) => this.dateSelectedHandler(e)} />;
   };
 
+  generateNewsItems = () => {
+    const newsItems = getNewsItems();
+    return newsItems.map((item) => {
+      return (
+        <div
+          key={item.news}
+          style={{ backgroundColor: item.bgColor, color: item.color }}
+          onClick={(e) => this.newsSourcePickedHandler(item.news)}
+        >
+          {item.initials}
+        </div>
+      );
+    });
+  };
+
   render() {
     return (
       <Aux>
@@ -85,11 +101,16 @@ class Home extends Component {
         <div className={classes.SelectorWrapper}>
           <div className={classes.DateTimeWrapper}>
             <div className={classes.CalenderWrapper}>
+              <label>Pick a date to begin...</label>
               {this.generateCalendar()}
             </div>
-            <div className={classes.TimesWrapper}>Times</div>
           </div>
-          <div className={classes.SiteOptionsWrapper}>News Options</div>
+          {this.state.pickedDate ? (
+            <div className={classes.SiteOptionsWrapper}>
+              {this.generateNewsItems()}
+            </div>
+          ) : null}
+          <div className={classes.NewsItemsWrapper}>News Items</div>
         </div>
         <div className={classes.ViewerWrapper}>
           <div className={classes.NewsImageWrapper}>Image</div>
