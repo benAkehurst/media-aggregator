@@ -15,6 +15,7 @@ import Header from '../../Components/Organisms/Header/Header';
 class Home extends Component {
   state = {
     isError: false,
+    isErrorMessage: null,
     isLoading: false,
     pickedDate: false,
     pickedDateValue: null,
@@ -32,6 +33,7 @@ class Home extends Component {
 
   newsSourcePickedHandler = (e) => {
     this.setState({
+      isLoading: true,
       pickedNewsSource: true,
       isLoadingNewsItems: true,
     });
@@ -44,6 +46,7 @@ class Home extends Component {
       .then((res) => {
         if (res.data.success) {
           this.setState({
+            isLoading: false,
             newsDataFromServer: res.data.data,
             isLoadingNewsItems: false,
           });
@@ -55,12 +58,14 @@ class Home extends Component {
   };
 
   singleItemSelectedHandler = (id) => {
+    this.setState({ isLoading: true });
     let clippingId = id;
     axios
       .get(`/reader/${clippingId}`)
       .then((res) => {
         if (res.data.status) {
           this.setState({
+            isLoading: false,
             singleItem: true,
             singleItemData: res.data.data,
           });
@@ -156,7 +161,6 @@ class Home extends Component {
             <div className={classes.NewsHeadlineWrapper}>
               <h3>{this.state.singleItemData.headline}</h3>
             </div>
-            <div className={classes.SharingWrapper}>Sharing</div>
           </div>
         ) : null}
       </Aux>
