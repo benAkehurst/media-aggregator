@@ -1,23 +1,25 @@
 # Media Aggregator Client
 
-This repo will act as a design system of Components that I have built while learning how to use React.js, and as a place to hack and learn about Storybook.
-
 ## Components/Packages Used
 
 - [Create React App](https://github.com/facebook/create-react-app)
 - [Storybook](https://storybook.js.org/docs/guides/guide-react/)
+- [Personal Design System](https://github.com/benAkehurst/react-component-library)
+- [Axios](https://github.com/axios/axios)
+- [React Calendar](https://github.com/wojtekmaj/react-calendar)
 
 ## Inspiration
 
-- [Clarity Design System](https://clarity.design/storybook/core/?path=/docs/welcome-clarity--core)
+- [Fireship Youtube Video](https://www.youtube.com/watch?v=JTOJsU3FSD8)
 
 ## Installation and Use
 
-1. Clone the repo - `https://github.com/benAkehurst/react-component-library.git`
-2. `npm i`
-3. `npm run storybook`
+1. Clone, install and run the [server](https://github.com/benAkehurst/media-aggregator/tree/master/server) portion of the project
+2. Clone the repo - `https://github.com/benAkehurst/`
+3. `npm i`
+4. `npm run start`
 
-This will launch the storybook instance. Happy hacking.
+This will launch the client.
 
 ## Tests
 
