@@ -1,67 +1,26 @@
 # Media Aggregator
 
-## Sites
+Inspired by [this video](https://www.youtube.com/watch?v=JTOJsU3FSD8), I built an app that will scrape a given news website every 15 minutes and store the results in a MongoDB collection.
 
-- [bbc news]('https://www.bbc.co.uk/news')
-- [dailymail]('https://www.dailymail.co.uk/home/index.html')
-- [yahoo]('https://uk.news.yahoo.com/')
-- [the guardian]('https://www.theguardian.com/uk')
-- [express]('https://www.express.co.uk/')
+The clinet side is a small React app that allows the user to view the stored data.
 
-- Save an archive of what the news in the uk has on thier website and be able to compare them
-  - Every 15 mins go and take a screenshot and copy headline on site
-- Save the front page of all major papers in an archive
+## Sites That Are Tracked
 
-## Server Architecture
+- [BBC news]('https://www.bbc.co.uk/news')
+- [The Daily Mail]('https://www.dailymail.co.uk/home/index.html')
+- [The Guardian]('https://www.theguardian.com/uk')
+- [The Express]('https://www.express.co.uk/')
 
-1. CRON job every 15 minutes will call scrape controller
-2. Scrape contorller will have a defined array of urls
-3. Puppetter function runs where it goes to the url and takes a screenshot and scrapes the headline text
+## App Architecture
 
-scrape controller
+### Client
 
-```javascript
-const puppet = require('puppeteer');
-const
-const newsUrls = ['aaaa','bbbb','ccc'];
+[Click here](https://github.com/benAkehurst/media-aggregator/tree/master/client) for the client folder.
 
-function scrape = () => {
-  let scrapeObjs = [];
+### Server
 
-  newsUrls.map(url => {
-    await puppet(url)
-    .then(res => {
-      if (res) {
-        scrapeObjs.push(res)
-      }
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  });
+[Click here](https://github.com/benAkehurst/media-aggregator/tree/master/server) for the client folder.
 
-  if (!scrapeObjs.length) {
-    return;
-  }
+## Questions/Comments/Suggestions
 
-  add scraped objs to collection in db as object:
-  scrapeResults = {
-    date: new Date.now(),
-    data: scrapeObjs
-  }
-}
-
-async function puppet = (url) => {
-  open url
-  take screenshot
-  upload screenshot to firebase -> get url back
-  find headline
-  make new object -> {
-    url: url,
-    screenshot: 'firebase url',
-    headline: 'aaaccccvvv',
-    time: new Date.now()
-  }
-  return newsObject
-};
-```
+If you would like to add anything or suggestions, open an issue or make a PR and we'll have a look at it.
