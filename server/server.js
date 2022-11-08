@@ -14,29 +14,23 @@ const NewsClipping = require('./api/models/newsClippingModel');
 const app = express();
 require('dotenv').config();
 
+// Server Port Controls
+const port = process.env.PORT || 8080;
+app.set('port', port);
+
 // DB Connection
-mongoose.Promise = global.Promise;
-mongoose.connect(
-  // `mongodb://${process.env.DB_CONNECT}`,
-  `mongodb://localhost:27017/news_scraper`,
-  {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  },
-  (e) => {
-    if (e) {
-      const dbError = {
-        error: e,
-        msg: 'Error Connecting to Database. Please check MongoDB is running',
-      };
-      console.log(dbError);
-    } else {
-      console.log('Connected to Database');
-    }
-  }
-);
+mongoose
+  .connect(
+    process.env.DB_URL,
+    () => {
+      console.log(`Connected to MongoDB Successfully`);
+    },
+    { useNewUrlParser: true },
+    { useUnifiedTopology: true }
+  )
+  .catch((err) => {
+    console.log(err);
+  });
 
 // Server Config
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -67,13 +61,5 @@ taskRoutes(app);
 scraperRoutes(app);
 readerRoutes(app);
 
-// 404 Handling
-app.use((req, res) => {
-  res.status(404).send({ url: req.originalUrl + ' not found' });
-});
-
-// Server Port Controls
-const port = process.env.PORT || '3000';
-app.set('port', port);
 const server = http.createServer(app);
 server.listen(port, () => console.log(`API running on localhost:${port}`));
