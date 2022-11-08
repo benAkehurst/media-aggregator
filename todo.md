@@ -4,11 +4,12 @@ server:
 - change db to cloud
 - change hosting to GCP
 - replace moment with date-fns
-- review package.json
+- ~~review package.json~~
+- change routes to be GET requests with body as params
 - gcp cron job?
-- tidy scraper contoller method if somehting fails
+- tidy scraper controller method if something fails
 - npm audit
-- update packages to work with node 18
+- ~~update packages to work with node 18~~
 
 client:
 - rebuild in Next

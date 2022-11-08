@@ -17,7 +17,7 @@ The clinet side is a small React app that allows the user to view the stored dat
 
 [Click here](https://github.com/benAkehurst/media-aggregator/tree/master/client) for the client folder.
 
-### Server
+### Server
 
 [Click here](https://github.com/benAkehurst/media-aggregator/tree/master/server) for the client folder.
 
