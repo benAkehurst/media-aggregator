@@ -35,7 +35,7 @@ const express = async (url) => {
   const page = await browser.newPage();
   await page.goto(url.url);
   await page.setDefaultNavigationTimeout(0);
-  await page.waitFor(2000);
+  await page.waitForTimeout(2000);
 
   // hide cookie popup
   await page.evaluate(() => {
@@ -49,14 +49,14 @@ const express = async (url) => {
     bg.style.opacity = 0;
   });
 
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
 
   // hide top ad
   await page.evaluate(() => {
     let cookies = document.querySelector('.superbanner');
     cookies.style.display = 'none';
   });
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
 
   // Take Screenshot
   let shotResult = await page

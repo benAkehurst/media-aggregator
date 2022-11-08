@@ -32,27 +32,27 @@ const telegraph = async (url) => {
   const page = await browser.newPage();
   await page.goto(url.url);
   await page.setDefaultNavigationTimeout(0);
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
 
   // close subscribe popup
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
   await page.click(
     '.martech-modal-component__close.martech-modal-component__close--right'
   );
 
   // close cookie popup
-  await page.waitFor(500);
+  await page.waitForTimeout(500);
   await page.click('#_evidon-accept-button');
 
   // hide top ad
-  await page.waitFor(500);
+  await page.waitForTimeout(500);
   await page.evaluate(() => {
     const bannerAd = document.querySelector('#advert_tmg_ban');
     bannerAd.style.display = 'none';
   });
 
   // extract headline
-  await page.waitFor(500);
+  await page.waitForTimeout(500);
   const headline = await page.evaluate(() => {
     let headline = document.querySelector('.list-headline__text').innerText;
     return headline;

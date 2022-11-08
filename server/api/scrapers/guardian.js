@@ -32,14 +32,14 @@ const guardian = async (url) => {
   const page = await browser.newPage();
   await page.setDefaultNavigationTimeout(0);
   await page.goto(url.url);
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
 
   // Hide cookie popup
   await page.evaluate(() => {
     let cookieBanner = document.querySelector('.css-9om789-bannerStyles');
     cookieBanner ? (cookieBanner.style.display = 'none') : null;
   });
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
 
   // Hide ad at page top
   await page.evaluate(() => {
@@ -54,7 +54,7 @@ const guardian = async (url) => {
     ).innerText;
     return headline;
   });
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
 
   // Take Screenshot
   let shotResult = await page

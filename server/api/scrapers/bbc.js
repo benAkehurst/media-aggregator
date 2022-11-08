@@ -32,14 +32,14 @@ const bbc = async (url) => {
   const page = await browser.newPage();
   await page.setDefaultNavigationTimeout(0);
   await page.goto(url.url);
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
 
   // Extract headline
   const headline = await page.evaluate(() => {
     let headline = document.querySelector('.gs-c-promo-heading').innerText;
     return headline;
   });
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
 
   // Take Screenshot
   let shotResult = await page

@@ -33,11 +33,11 @@ const dm = async (url) => {
   const page = await browser.newPage();
   await page.goto(url.url);
   await page.setDefaultNavigationTimeout(0);
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
 
   // Close Cookie popup
   await page.click(dailyMailCookieOkButton);
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
 
   // Hide page ads
   await page.evaluate(() => {
@@ -54,7 +54,7 @@ const dm = async (url) => {
     let headline = document.querySelector('.linkro-darkred').innerText;
     return headline;
   });
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
 
   // Take Screenshot
   let shotResult = await page
