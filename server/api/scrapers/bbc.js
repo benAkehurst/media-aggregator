@@ -1,14 +1,9 @@
 const puppeteer = require('puppeteer');
-const cloudinary = require('cloudinary').v2;
 const moment = require('moment');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const { imageUploader } = require('./../../helpers/imageUploader');
 
-const bbc = async (url) => {
+exports.bbc = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
 
@@ -54,7 +49,7 @@ const bbc = async (url) => {
     });
 
   // Upload screenshot to Cloudinary
-  let generateScreenshotAndNewsObj = cloundinaryPromise(
+  let generateScreenshotAndNewsObj = await imageUploader(
     shotResult,
     cloudinary_options
   ).then((res) => {
@@ -71,19 +66,3 @@ const bbc = async (url) => {
   browser.close();
   return generateScreenshotAndNewsObj;
 };
-
-function cloundinaryPromise(shotResult, cloudinary_options) {
-  return new Promise(function (res, rej) {
-    cloudinary.uploader
-      .upload_stream(cloudinary_options, function (error, cloudinary_result) {
-        if (error) {
-          console.error('Upload to cloudinary failed: ', error);
-          rej(error);
-        }
-        res(cloudinary_result);
-      })
-      .end(shotResult);
-  });
-}
-
-module.exports = bbc;
