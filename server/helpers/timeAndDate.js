@@ -1,5 +1,5 @@
-exports.formatTime = (date, lowTime, highTime) => {
-  const parsedDate = swapArrayElements(date, 1, 4).join('');
+exports.formatTime = async (date, lowTime, highTime) => {
+  const parsedDate = await swapArrayElements(date, 1, 4).join('');
   const parsedLowTime = parseInt(lowTime);
   const parsedHighTime = parseInt(highTime);
   let dateObject = new Date(parsedDate);
@@ -10,7 +10,7 @@ exports.formatTime = (date, lowTime, highTime) => {
   return { lowTime: lowTimeFormatted, highTime: highTimeFormatted };
 };
 
-const swapArrayElements = (arr, a, b) => {
+const swapArrayElements = async (arr, a, b) => {
   let _arr = [...arr];
   let temp = _arr[a];
   _arr[a] = _arr[b];
