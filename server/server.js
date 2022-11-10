@@ -6,8 +6,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 // Models Imports
-const User = require('./api/models/userModel');
-const Task = require('./api/models/todoListModel');
 const NewsClipping = require('./api/models/newsClippingModel');
 
 // Init Express
@@ -52,12 +50,8 @@ app.use((req, res, next) => {
 app.use(cors());
 
 // Routes Definitions
-const userRoutes = require('./api/routes/userRoutes');
-const taskRoutes = require('./api/routes/todoListRoutes');
 const scraperRoutes = require('./api/routes/scraperRoutes');
 const readerRoutes = require('./api/routes/readerRoutes');
-userRoutes(app);
-taskRoutes(app);
 scraperRoutes(app);
 readerRoutes(app);
 
