@@ -40,7 +40,7 @@ exports.listAllClippingsFromHour = async (req, res) => {
    * query structure: ?date=10/11/2022&lowTime=13&highTime=14
    */
   const { date, lowTime, highTime } = req.query;
-  const formattedTime = formatTime(date, lowTime, highTime);
+  const formattedTime = await formatTime(date, lowTime, highTime);
   if (!date || !lowTime || !highTime) {
     return res.status(400).json({
       success: false,
