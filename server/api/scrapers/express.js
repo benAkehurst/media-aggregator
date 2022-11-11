@@ -22,7 +22,7 @@ exports.express = async (url) => {
     ],
     defaultViewport: {
       width: 1440,
-      height: 1080,
+      height: 2000,
     },
   });
 

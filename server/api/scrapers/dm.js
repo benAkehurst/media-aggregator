@@ -22,7 +22,7 @@ exports.dm = async (url) => {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
     ],
-    defaultViewport: { width: 1440, height: 1080 },
+    defaultViewport: { width: 1440, height: 2000 },
   });
 
   // Launch scraper
