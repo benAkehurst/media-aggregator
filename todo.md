@@ -1,11 +1,11 @@
 # server
 
-- look at each method of scraping and check it stil works
-- tidy scraper controller method if something fails
 - change hosting to GCP
 - replace moment with date-fns
 - gcp cron job?
 - logging
+- ~~look at each method of scraping and check it still works~~
+- ~~tidy scraper controller method if something fails~~
 - ~~npm audit~~
 - ~~remove all the code for user auth and todos~~
 - ~~change db to cloud~~
