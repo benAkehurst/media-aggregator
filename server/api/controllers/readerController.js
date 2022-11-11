@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const NewsClipping = mongoose.model('NewsClipping');
+const { NEWS_SOURCES } = require('../../data/newsSources');
 
 const { formatTime } = require('./../../helpers/timeAndDate');
 
@@ -144,6 +145,22 @@ exports.readSingleClipping = async (req, res) => {
     return res.status(500).json({
       error: err,
       message: `error getting all clippings from ${newsSite}`,
+    });
+  }
+};
+
+exports.getAllSources = async (req, res) => {
+  const newsSources = NEWS_SOURCES;
+  try {
+    res.status(200).json({
+      status: true,
+      message: 'news sources found',
+      data: newsSources,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: err,
+      message: `error news sources`,
     });
   }
 };
