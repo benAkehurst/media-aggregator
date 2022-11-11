@@ -14,6 +14,8 @@
 
 ## Installation and Use
 
+### nb. use Node v14
+
 1. Clone, install and run the [server](https://github.com/benAkehurst/media-aggregator/tree/master/server) portion of the project
 2. Clone the repo - `https://github.com/benAkehurst/`
 3. `npm i`

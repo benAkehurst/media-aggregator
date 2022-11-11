@@ -85,9 +85,9 @@ exports.listAllClippingsFromHour = async (req, res) => {
 
 exports.listAllClippingsFromNewsSource = async (req, res) => {
   /**
-   * query structure: ?newsSite=guardian
+   * query structure: ?newsSite=bbc&date=11/11/2022
    */
-  const { newsSite } = req.query;
+  const { newsSite, date } = req.query;
   if (!newsSite) {
     return res.status(400).json({
       success: false,
@@ -95,7 +95,7 @@ exports.listAllClippingsFromNewsSource = async (req, res) => {
     });
   }
   try {
-    NewsClipping.find({ name: newsSite }, (err, clippings) => {
+    NewsClipping.find({ name: newsSite, date: date }, (err, clippings) => {
       if (err) {
         return res.status(500).json({
           error: err,
