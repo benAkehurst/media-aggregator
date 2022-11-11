@@ -1,14 +1,9 @@
 const puppeteer = require('puppeteer');
-const cloudinary = require('cloudinary').v2;
 const moment = require('moment');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const { imageUploader } = require('./../../helpers/imageUploader');
 
-const express = async (url) => {
+exports.express = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
 
@@ -27,36 +22,51 @@ const express = async (url) => {
     ],
     defaultViewport: {
       width: 1440,
-      height: 1080,
+      height: 2000,
     },
   });
 
   // Launch scraper
   const page = await browser.newPage();
+  await page.setRequestInterception(true);
+  const rejectRequestPattern = [
+    'googlesyndication.com',
+    '/*.doubleclick.net',
+    '/*.amazon-adsystem.com',
+    '/*.adnxs.com',
+  ];
+  const blockList = [];
+  await page.on('request', (request) => {
+    if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
+      blockList.push(request.url());
+      request.abort();
+    } else request.continue();
+  });
+  await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'
+  );
   await page.goto(url.url);
-  await page.setDefaultNavigationTimeout(0);
-  await page.waitFor(2000);
 
   // hide cookie popup
+  await page.waitForXPath('//*[@id="qc-cmp2-ui"]/div[2]/div/button[2]');
   await page.evaluate(() => {
-    let cookies = document.querySelector('#qcCmpUi');
-    cookies.style.visibility = 'hidden';
+    //qc-cmp2-summary-buttons
+    document.querySelectorAll('[mode="primary"]')[0].click();
   });
-
-  // change page bg color
-  await page.evaluate(() => {
-    let bg = document.querySelector('.qc-cmp-showing');
-    bg.style.opacity = 0;
-  });
-
-  await page.waitFor(1000);
 
   // hide top ad
+  await page.waitForSelector('.superbanner');
   await page.evaluate(() => {
     let cookies = document.querySelector('.superbanner');
     cookies.style.display = 'none';
   });
-  await page.waitFor(1000);
+
+  // Extract headline
+  await page.waitForSelector('header > h2');
+  const headline = await page.evaluate(() => {
+    let headline = document.querySelector('header > h2').innerText;
+    return headline;
+  });
 
   // Take Screenshot
   let shotResult = await page
@@ -71,7 +81,7 @@ const express = async (url) => {
     });
 
   // Upload screenshot to Cloudinary
-  let generateScreenshotAndNewsObj = cloundinaryPromise(
+  let generateScreenshotAndNewsObj = await imageUploader(
     shotResult,
     cloudinary_options
   ).then((res) => {
@@ -79,6 +89,7 @@ const express = async (url) => {
       url: url.url,
       name: url.name,
       date: date,
+      headline: headline,
       screenshotUrl: res.secure_url,
     });
   });
@@ -87,19 +98,3 @@ const express = async (url) => {
   browser.close();
   return generateScreenshotAndNewsObj;
 };
-
-function cloundinaryPromise(shotResult, cloudinary_options) {
-  return new Promise(function (res, rej) {
-    cloudinary.uploader
-      .upload_stream(cloudinary_options, function (error, cloudinary_result) {
-        if (error) {
-          console.error('Upload to cloudinary failed: ', error);
-          rej(error);
-        }
-        res(cloudinary_result);
-      })
-      .end(shotResult);
-  });
-}
-
-module.exports = express;

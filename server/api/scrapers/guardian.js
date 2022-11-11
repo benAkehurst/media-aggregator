@@ -1,14 +1,9 @@
 const puppeteer = require('puppeteer');
-const cloudinary = require('cloudinary').v2;
 const moment = require('moment');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const { imageUploader } = require('./../../helpers/imageUploader');
 
-const guardian = async (url) => {
+exports.guardian = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
 
@@ -25,36 +20,39 @@ const guardian = async (url) => {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
     ],
-    defaultViewport: { width: 1440, height: 1080 },
+    defaultViewport: { width: 1440, height: 2000 },
   });
 
   // Launch scraper
   const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(0);
+  await page.setRequestInterception(true);
+  const rejectRequestPattern = [
+    'sourcepoint.theguardian.com',
+    'googlesyndication.com',
+    '/*.doubleclick.net',
+    '/*.amazon-adsystem.com',
+    '/*.adnxs.com',
+  ];
+  const blockList = [];
+  await page.on('request', (request) => {
+    if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
+      blockList.push(request.url());
+      request.abort();
+    } else request.continue();
+  });
+  await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'
+  );
   await page.goto(url.url);
-  await page.waitFor(3000);
-
-  // Hide cookie popup
-  await page.evaluate(() => {
-    let cookieBanner = document.querySelector('.css-9om789-bannerStyles');
-    cookieBanner ? (cookieBanner.style.display = 'none') : null;
-  });
-  await page.waitFor(3000);
-
-  // Hide ad at page top
-  await page.evaluate(() => {
-    let topAd = document.querySelector('.top-banner-ad-container');
-    topAd.style.display = 'none';
-  });
 
   // Extract headline
+  await page.waitForSelector('.u-faux-block-link__overlay.js-headline-text');
   const headline = await page.evaluate(() => {
     let headline = document.querySelector(
       '.u-faux-block-link__overlay.js-headline-text'
     ).innerText;
     return headline;
   });
-  await page.waitFor(1000);
 
   // Take Screenshot
   let shotResult = await page
@@ -69,7 +67,7 @@ const guardian = async (url) => {
     });
 
   // Upload screenshot to Cloudinary
-  let generateScreenshotAndNewsObj = cloundinaryPromise(
+  let generateScreenshotAndNewsObj = await imageUploader(
     shotResult,
     cloudinary_options
   ).then((res) => {
@@ -86,19 +84,3 @@ const guardian = async (url) => {
   browser.close();
   return generateScreenshotAndNewsObj;
 };
-
-function cloundinaryPromise(shotResult, cloudinary_options) {
-  return new Promise(function (res, rej) {
-    cloudinary.uploader
-      .upload_stream(cloudinary_options, function (error, cloudinary_result) {
-        if (error) {
-          console.error('Upload to cloudinary failed: ', error);
-          rej(error);
-        }
-        res(cloudinary_result);
-      })
-      .end(shotResult);
-  });
-}
-
-module.exports = guardian;

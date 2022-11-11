@@ -3,7 +3,7 @@ const moment = require('moment');
 
 const { imageUploader } = require('./../../helpers/imageUploader');
 
-exports.telegraph = async (url) => {
+exports.sun = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
 
@@ -27,7 +27,7 @@ exports.telegraph = async (url) => {
   const page = await browser.newPage();
   await page.setRequestInterception(true);
   const rejectRequestPattern = [
-    'tcf2.telegraph.co.uk',
+    'cmp.cdn.thesun.co.uk',
     'googlesyndication.com',
     '/*.doubleclick.net',
     '/*.amazon-adsystem.com',
@@ -45,17 +45,10 @@ exports.telegraph = async (url) => {
   );
   await page.goto(url.url);
 
-  // hide top ad
-  await page.waitForSelector('.subscribe-banner');
-  await page.evaluate(() => {
-    const bannerAd = document.querySelector('.subscribe-banner');
-    bannerAd.style.display = 'none';
-  });
-
-  // extract headline
-  await page.waitForSelector('.list-headline__text');
+  // Extract headline
+  await page.waitForSelector('.teaser-anchor');
   const headline = await page.evaluate(() => {
-    let headline = document.querySelector('.list-headline__text').innerText;
+    let headline = document.querySelector('.teaser-anchor').dataset.headline;
     return headline;
   });
 

@@ -1,14 +1,9 @@
 const puppeteer = require('puppeteer');
-const cloudinary = require('cloudinary').v2;
 const moment = require('moment');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const { imageUploader } = require('./../../helpers/imageUploader');
 
-const bbc = async (url) => {
+exports.bbc = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
 
@@ -25,21 +20,21 @@ const bbc = async (url) => {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
     ],
-    defaultViewport: { width: 1440, height: 1080 },
+    defaultViewport: { width: 1440, height: 2000 },
   });
 
   // Launch scraper
   const page = await browser.newPage();
   await page.setDefaultNavigationTimeout(0);
   await page.goto(url.url);
-  await page.waitFor(3000);
+  await page.waitForTimeout(3000);
 
   // Extract headline
   const headline = await page.evaluate(() => {
     let headline = document.querySelector('.gs-c-promo-heading').innerText;
     return headline;
   });
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
 
   // Take Screenshot
   let shotResult = await page
@@ -54,7 +49,7 @@ const bbc = async (url) => {
     });
 
   // Upload screenshot to Cloudinary
-  let generateScreenshotAndNewsObj = cloundinaryPromise(
+  let generateScreenshotAndNewsObj = await imageUploader(
     shotResult,
     cloudinary_options
   ).then((res) => {
@@ -71,19 +66,3 @@ const bbc = async (url) => {
   browser.close();
   return generateScreenshotAndNewsObj;
 };
-
-function cloundinaryPromise(shotResult, cloudinary_options) {
-  return new Promise(function (res, rej) {
-    cloudinary.uploader
-      .upload_stream(cloudinary_options, function (error, cloudinary_result) {
-        if (error) {
-          console.error('Upload to cloudinary failed: ', error);
-          rej(error);
-        }
-        res(cloudinary_result);
-      })
-      .end(shotResult);
-  });
-}
-
-module.exports = bbc;

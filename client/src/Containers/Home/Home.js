@@ -37,12 +37,10 @@ class Home extends Component {
       pickedNewsSource: true,
       isLoadingNewsItems: true,
     });
-    const postData = {
-      date: this.state.pickedDateValue,
-      newsSite: e,
-    };
     axios
-      .post(`/reader/single-news-source/`, { data: postData })
+      .get(
+        `/reader/single-news-source/?newsSite=${e}&date=${this.state.pickedDateValue}`
+      )
       .then((res) => {
         if (res.data.success) {
           this.setState({
@@ -61,7 +59,7 @@ class Home extends Component {
     this.setState({ isLoading: true });
     let clippingId = id;
     axios
-      .get(`/reader/${clippingId}`)
+      .get(`/reader?clippingId=${clippingId}`)
       .then((res) => {
         if (res.data.status) {
           this.setState({
