@@ -1,14 +1,9 @@
 const puppeteer = require('puppeteer');
-const cloudinary = require('cloudinary').v2;
 const moment = require('moment');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const { imageUploader } = require('./../../helpers/imageUploader');
 
-const telegraph = async (url) => {
+exports.telegraph = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
 
@@ -19,40 +14,47 @@ const telegraph = async (url) => {
 
   // Define puppeteer instance
   const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-    ],
+    headless: false,
+    // headless: true,
+    // args: [
+    //   '--no-sandbox',
+    //   '--disable-setuid-sandbox',
+    //   '--disable-dev-shm-usage',
+    // ],
     defaultViewport: { width: 1440, height: 1080 },
   });
 
   // Launch scraper
   const page = await browser.newPage();
-  await page.goto(url.url);
-  await page.setDefaultNavigationTimeout(0);
-  await page.waitForTimeout(3000);
-
-  // close subscribe popup
-  await page.waitForTimeout(1000);
-  await page.click(
-    '.martech-modal-component__close.martech-modal-component__close--right'
+  await page.setRequestInterception(true);
+  const rejectRequestPattern = [
+    'tcf2.telegraph.co.uk',
+    'googlesyndication.com',
+    '/*.doubleclick.net',
+    '/*.amazon-adsystem.com',
+    '/*.adnxs.com',
+  ];
+  const blockList = [];
+  await page.on('request', (request) => {
+    if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
+      blockList.push(request.url());
+      request.abort();
+    } else request.continue();
+  });
+  await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'
   );
-
-  // close cookie popup
-  await page.waitForTimeout(500);
-  await page.click('#_evidon-accept-button');
+  await page.goto(url.url);
 
   // hide top ad
-  await page.waitForTimeout(500);
+  await page.waitForSelector('.subscribe-banner');
   await page.evaluate(() => {
-    const bannerAd = document.querySelector('#advert_tmg_ban');
+    const bannerAd = document.querySelector('.subscribe-banner');
     bannerAd.style.display = 'none';
   });
 
   // extract headline
-  await page.waitForTimeout(500);
+  await page.waitForSelector('.list-headline__text');
   const headline = await page.evaluate(() => {
     let headline = document.querySelector('.list-headline__text').innerText;
     return headline;
@@ -71,7 +73,7 @@ const telegraph = async (url) => {
     });
 
   // Upload screenshot to Cloudinary
-  let generateScreenshotAndNewsObj = cloundinaryPromise(
+  let generateScreenshotAndNewsObj = await imageUploader(
     shotResult,
     cloudinary_options
   ).then((res) => {
@@ -88,19 +90,3 @@ const telegraph = async (url) => {
   browser.close();
   return generateScreenshotAndNewsObj;
 };
-
-function cloundinaryPromise(shotResult, cloudinary_options) {
-  return new Promise(function (res, rej) {
-    cloudinary.uploader
-      .upload_stream(cloudinary_options, function (error, cloudinary_result) {
-        if (error) {
-          console.error('Upload to cloudinary failed: ', error);
-          rej(error);
-        }
-        res(cloudinary_result);
-      })
-      .end(shotResult);
-  });
-}
-
-module.exports = telegraph;

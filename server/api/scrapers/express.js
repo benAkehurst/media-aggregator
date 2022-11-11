@@ -27,7 +27,6 @@ exports.express = async (url) => {
   });
 
   // Launch scraper
-  // Launch scraper
   const page = await browser.newPage();
   await page.setRequestInterception(true);
   const rejectRequestPattern = [
