@@ -14,13 +14,12 @@ exports.mirror = async (url) => {
 
   // Define puppeteer instance
   const browser = await puppeteer.launch({
-    headless: false,
-    // headless: true,
-    // args: [
-    //   '--no-sandbox',
-    //   '--disable-setuid-sandbox',
-    //   '--disable-dev-shm-usage',
-    // ],
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+    ],
     defaultViewport: { width: 1440, height: 1080 },
   });
 
