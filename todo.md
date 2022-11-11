@@ -5,6 +5,7 @@
 - change hosting to GCP
 - replace moment with date-fns
 - gcp cron job?
+- logging
 - ~~npm audit~~
 - ~~remove all the code for user auth and todos~~
 - ~~change db to cloud~~
