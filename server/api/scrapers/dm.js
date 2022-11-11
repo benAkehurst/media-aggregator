@@ -6,7 +6,9 @@ const { imageUploader } = require('./../../helpers/imageUploader');
 exports.dm = async (url) => {
   const d = new Date();
   const date = moment(new Date()).format('DD/MM/YYYY');
-  const dailyMailCookieOkButton = '.button_127GD.primary_2xk2l';
+  const dmCookieBanner = '.container_1gQfi.desktop_2jEgC';
+  const dmCookieOkButton = '.button_127GD.primary_2xk2l';
+  const dmBillboard = '.billboard-container';
 
   // Set file name for cloudinary
   const cloudinary_options = {
@@ -27,7 +29,6 @@ exports.dm = async (url) => {
   // Launch scraper
   const page = await browser.newPage();
   await page.setRequestInterception(true);
-
   const rejectRequestPattern = [
     'googlesyndication.com',
     '/*.doubleclick.net',
@@ -35,29 +36,26 @@ exports.dm = async (url) => {
     '/*.adnxs.com',
   ];
   const blockList = [];
-
   await page.on('request', (request) => {
     if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
       blockList.push(request.url());
       request.abort();
     } else request.continue();
   });
-
   await page.goto(url.url);
   await page.setUserAgent(
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'
   );
 
   // Close Cookie popup
-  await page.click(dailyMailCookieOkButton);
-  await page.waitForTimeout(3000);
+  await page.waitForSelector(dmCookieBanner);
+  await page.click(dmCookieOkButton);
 
   // Extract headline
   const headline = await page.evaluate(() => {
     let headline = document.querySelector('.linkro-darkred').innerText;
     return headline;
   });
-  await page.waitForTimeout(1000);
 
   // Take Screenshot
   let shotResult = await page
