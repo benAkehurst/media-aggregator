@@ -8,7 +8,6 @@ exports.dm = async (url) => {
   const date = moment(new Date()).format('DD/MM/YYYY');
   const dmCookieBanner = '.container_1gQfi.desktop_2jEgC';
   const dmCookieOkButton = '.button_127GD.primary_2xk2l';
-  const dmBillboard = '.billboard-container';
 
   // Set file name for cloudinary
   const cloudinary_options = {
