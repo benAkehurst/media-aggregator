@@ -8,6 +8,7 @@ const { dm } = require('../scrapers/dm');
 const { guardian } = require('../scrapers/guardian');
 const { express } = require('../scrapers/express');
 const { telegraph } = require('../scrapers/telegraph');
+const { independent } = require('../scrapers/independent');
 
 const newsUrls = NEWS_SOURCES;
 
@@ -41,6 +42,12 @@ const scrapeV1 = async (req, res) => {
       .then((res) => {
         createNewClipping(res);
         console.log('telegraph finished');
+      })
+      .catch((err) => console.log(err));
+    await independent(newsUrls[5])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('independent finished');
       })
       .catch((err) => console.log(err));
     res.status(200).json({
