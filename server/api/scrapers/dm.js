@@ -72,7 +72,7 @@ exports.dm = async (url) => {
     });
 
   // Upload screenshot to Cloudinary
-  let generateScreenshotAndNewsObj = imageUploader(
+  let generateScreenshotAndNewsObj = await imageUploader(
     shotResult,
     cloudinary_options
   ).then((res) => {
