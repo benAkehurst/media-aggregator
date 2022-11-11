@@ -7,6 +7,7 @@ const NEWS_SOURCES = [
   { url: 'https://www.independent.co.uk/', name: 'independent' },
   { url: 'https://www.mirror.co.uk/', name: 'mirror' },
   { url: 'https://www.channel4.com/news/', name: 'channel4' },
+  { url: 'https://www.thesun.co.uk/', name: 'sun' },
 ];
 
 module.exports = { NEWS_SOURCES };
