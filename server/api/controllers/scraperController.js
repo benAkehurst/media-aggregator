@@ -10,6 +10,7 @@ const { express } = require('../scrapers/express');
 const { telegraph } = require('../scrapers/telegraph');
 const { independent } = require('../scrapers/independent');
 const { mirror } = require('../scrapers/mirror');
+const { channel4 } = require('../scrapers/channel4');
 
 const newsUrls = NEWS_SOURCES;
 
@@ -55,6 +56,12 @@ const scrapeV1 = async (req, res) => {
       .then((res) => {
         createNewClipping(res);
         console.log('mirror finished');
+      })
+      .catch((err) => console.log(err));
+    await channel4(newsUrls[7])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('channel4 finished');
       })
       .catch((err) => console.log(err));
     res.status(200).json({
