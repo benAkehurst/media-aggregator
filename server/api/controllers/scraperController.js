@@ -15,6 +15,7 @@ const { sun } = require('../scrapers/sun');
 
 const newsUrls = NEWS_SOURCES;
 
+// External Job to run manually from API request
 const scrapeV1 = async (req, res) => {
   try {
     await bbc(newsUrls[0])
@@ -84,6 +85,70 @@ const scrapeV1 = async (req, res) => {
   }
 };
 
+// Internal Scrape Method used by the Cron Job
+const scrapeInternal = async (req, res) => {
+  try {
+    const start = Date.now();
+    console.log('Starting scrape');
+    await bbc(newsUrls[0])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('bbc finished');
+      })
+      .catch((err) => console.log(err));
+    await dm(newsUrls[1])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('daily mail finished');
+      })
+      .catch((err) => console.log(err));
+    await guardian(newsUrls[2])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('gaurdian finished');
+      })
+      .catch((err) => console.log(err));
+    await express(newsUrls[3])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('express finished');
+      })
+      .catch((err) => console.log(err));
+    await telegraph(newsUrls[4])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('telegraph finished');
+      })
+      .catch((err) => console.log(err));
+    await independent(newsUrls[5])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('independent finished');
+      })
+      .catch((err) => console.log(err));
+    await mirror(newsUrls[6])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('mirror finished');
+      })
+      .catch((err) => console.log(err));
+    await channel4(newsUrls[7])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('channel4 finished');
+      })
+      .catch((err) => console.log(err));
+    await sun(newsUrls[8])
+      .then((res) => {
+        createNewClipping(res);
+        console.log('sun finished');
+      })
+      .catch((err) => console.log(err));
+  } catch (error) {
+    console.log('something went wrong while scraping', error);
+  }
+};
+
 const createNewClipping = async (clipping) => {
   let newNewsClipping = new NewsClipping({
     url: clipping.url,
@@ -95,8 +160,9 @@ const createNewClipping = async (clipping) => {
   await newNewsClipping.save();
 };
 
-// cron.schedule('*/15 * * * *', () => {
-//   scrape();
-// });
+cron.schedule('*/30 * * * *', () => {
+  console.log('Cron Job Called');
+  scrapeInternal();
+});
 
 module.exports = { scrapeV1 };

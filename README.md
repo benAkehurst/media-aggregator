@@ -2,7 +2,7 @@
 
 Inspired by [this video](https://www.youtube.com/watch?v=JTOJsU3FSD8), I built an app that will scrape a given news website every 15 minutes and store the results in a MongoDB collection.
 
-The clinet side is a small React app that allows the user to view the stored data.
+The client side is a small React app that allows the user to view the stored data.
 
 ## Sites That Are Tracked
 
